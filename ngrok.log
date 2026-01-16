@@ -1,0 +1,17 @@
+t=2026-01-16T20:20:35+0530 lvl=info msg="no configuration paths supplied"
+t=2026-01-16T20:20:35+0530 lvl=info msg="using configuration at default config path" path=/home/user/.config/ngrok/ngrok.yml
+t=2026-01-16T20:20:35+0530 lvl=info msg="open config file" path=/home/user/.config/ngrok/ngrok.yml err=nil
+t=2026-01-16T20:20:35+0530 lvl=info msg="FIPS 140 mode" enabled=false
+t=2026-01-16T20:20:35+0530 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2026-01-16T20:20:35+0530 lvl=info msg="client session established" obj=tunnels.session
+t=2026-01-16T20:20:35+0530 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2026-01-16T20:20:35+0530 lvl=info msg="started tunnel" obj=tunnels name=command_line addr=http://localhost:3000 url=https://panicled-flatteredly-carey.ngrok-free.dev
+t=2026-01-16T20:20:37+0530 lvl=info msg="update available" obj=updater
+t=2026-01-16T20:20:41+0530 lvl=info msg=start pg=/api/tunnels id=00e1ac565c2d8523
+t=2026-01-16T20:20:41+0530 lvl=info msg=end pg=/api/tunnels id=00e1ac565c2d8523 status=200 dur=254.817µs
+t=2026-01-16T20:20:51+0530 lvl=info msg=start pg=/api/tunnels id=3434a58ad951f484
+t=2026-01-16T20:20:51+0530 lvl=info msg=end pg=/api/tunnels id=3434a58ad951f484 status=200 dur=143.196µs
+t=2026-01-16T20:21:07+0530 lvl=info msg=start pg=/api/tunnels id=b8ad7f9d9b19bbb8
+t=2026-01-16T20:21:07+0530 lvl=info msg=end pg=/api/tunnels id=b8ad7f9d9b19bbb8 status=200 dur=201.09µs
+t=2026-01-16T20:21:34+0530 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2026-01-16T20:21:34+0530 lvl=info msg="session closing" obj=tunnels.session err=nil

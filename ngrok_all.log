@@ -1,0 +1,8 @@
+t=2026-01-16T20:21:34+0530 lvl=info msg="open config file" path=/home/user/Desktop/antigravityTask/ngrok.yml err=nil
+ERROR:  Error reading configuration file '/home/user/Desktop/antigravityTask/ngrok.yml': `version` property is required.
+ERROR:  
+ERROR:  If you're upgrading from an older version of ngrok, you can run:
+ERROR:  
+ERROR:      ngrok config upgrade
+ERROR:  
+ERROR:  to upgrade to the new format and add the version number.

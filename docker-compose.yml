@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: blockchain_indexer_db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: blockchain_indexer
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - blockchain-net
+
+  backend:
+    build: ./backend
+    container_name: blockchain_indexer_backend
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=blockchain_indexer
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - ENABLE_ETH_INDEXER=true
+      - ENABLE_BTC_INDEXER=true
+      - ETH_RPC_URL=https://ethereum-rpc.publicnode.com
+      - BTC_RPC_URL=https://bitcoin-rpc.publicnode.com
+      - WS_ETH_URL=wss://ethereum-rpc.publicnode.com
+      - WS_BTC_URL=wss://ws.blockchain.info/inv
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+    networks:
+      - blockchain-net
+
+  frontend:
+    build: 
+      context: ./frontend
+      args:
+        - NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
+    container_name: blockchain_indexer_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - blockchain-net
+
+volumes:
+  postgres_data:
+
+networks:
+  blockchain-net:
+    driver: bridge
