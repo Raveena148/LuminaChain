@@ -1,0 +1,19 @@
+@use '../../../styles/variables' as *;
+
+.btn {
+    padding: 4px;
+    border-radius: 4px;
+    color: $text-secondary;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    &.copied {
+        color: $success;
+    }
+}

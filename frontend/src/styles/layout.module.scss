@@ -1,0 +1,30 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.appShell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.mainContent {
+    flex: 1;
+    margin-left: 260px; // Sidebar width
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+
+    @include tablet {
+        margin-left: 0;
+    }
+}
+
+.pageContainer {
+    flex: 1;
+    padding: 2.5rem;
+    background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.03), transparent 40%);
+
+    @include mobile {
+        padding: 1rem;
+    }
+}

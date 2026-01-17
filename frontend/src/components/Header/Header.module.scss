@@ -1,0 +1,335 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.header {
+    height: $header-height;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    background: rgba(4, 6, 11, 0.9); // Matching obsidian tone
+    backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+
+    @include mobile {
+        padding: 0 1rem 0 3.5rem;
+    }
+}
+
+.searchWrapper {
+    position: relative;
+    width: 450px;
+
+    @include tablet {
+        width: 300px;
+    }
+
+    @include mobile {
+        display: none;
+    }
+
+    .icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $text-secondary;
+    }
+
+    .input {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid $border;
+        border-radius: 12px;
+        padding: 0.7rem 1rem 0.7rem 2.8rem;
+        color: white;
+        outline: none;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+
+        &:focus {
+            border-color: $primary;
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+    }
+
+    .shortcut {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 7px;
+        border-radius: 5px;
+        font-size: 0.7rem;
+        color: $text-secondary;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+}
+
+.brandBadge {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.4rem 1rem;
+    background: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $primary;
+    letter-spacing: 0.02em;
+
+    @include tablet {
+        display: none;
+    }
+
+    .pulse {
+        width: 6px;
+        height: 6px;
+        background: $primary;
+        border-radius: 50%;
+        box-shadow: 0 0 8px $primary;
+        animation: pulse 2s infinite;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+        box-shadow: 0 0 12px $primary;
+    }
+
+    100% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+}
+
+.actions {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+}
+
+.actionItem {
+    position: relative;
+}
+
+.iconBtn {
+    position: relative;
+    padding: 10px;
+    border-radius: 10px;
+    color: $text-secondary;
+    transition: all 0.2s;
+    background: transparent;
+
+    &:hover,
+    &.active {
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+    }
+
+    .badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 8px;
+        height: 8px;
+        background: #10b981; // Green for "live"
+        border-radius: 50%;
+        border: 2px solid #0f172a;
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+    }
+}
+
+.profileBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.4rem 1rem 0.4rem 0.4rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid $border;
+    border-radius: 30px;
+    transition: all 0.2s;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: $text-secondary;
+    }
+
+    .avatar {
+        width: 32px;
+        height: 32px;
+        background: $gradient-primary;
+        border-radius: 50%;
+        @include flex-center;
+        color: white;
+    }
+
+    .userInfo {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        .nameRow {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: $text;
+            line-height: 1.2;
+        }
+
+        .proBadge {
+            font-size: 0.6rem;
+            font-weight: 800;
+            background: $gradient-primary;
+            color: white;
+            padding: 1px 4px;
+            border-radius: 4px;
+            letter-spacing: 0.05em;
+        }
+
+        .role {
+            font-size: 0.7rem;
+            color: $text-secondary;
+        }
+    }
+}
+
+.dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 260px;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid $border;
+    border-radius: 14px;
+    box-shadow: $shadow-lg;
+    padding: 0.75rem;
+    overflow: hidden;
+    animation: slideUp 0.2s ease;
+
+    .dropdownHeader {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: $text-secondary;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .dropdownList {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .notifItem {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.03);
+        font-size: 0.8rem;
+        color: $text;
+
+        .notifDot {
+            flex-shrink: 0;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: $primary;
+
+            &.ethDot {
+                background: #627eea;
+                box-shadow: 0 0 8px rgba(98, 126, 234, 0.4);
+            }
+
+            &.btcDot {
+                background: #f7931a;
+                box-shadow: 0 0 8px rgba(247, 147, 26, 0.4);
+            }
+        }
+
+        .notifNetwork {
+            font-weight: 700;
+            color: $text;
+            margin-right: 4px;
+        }
+
+        .notifHeight {
+            color: $primary;
+            font-weight: 600;
+        }
+    }
+
+    .noData {
+        padding: 1.5rem;
+        text-align: center;
+        color: $text-secondary;
+        font-size: 0.85rem;
+        font-style: italic;
+    }
+
+    .menuItem {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        color: $text-secondary;
+        transition: all 0.2s;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: white;
+        }
+
+        &.logout {
+            color: $error;
+
+            &:hover {
+                background: rgba(239, 68, 68, 0.1);
+            }
+        }
+    }
+
+    .divider {
+        height: 1px;
+        background: $border;
+        margin: 0.5rem 0;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

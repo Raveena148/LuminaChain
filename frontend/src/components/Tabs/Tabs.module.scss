@@ -1,0 +1,30 @@
+@use '../../styles/variables' as *;
+
+.tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.5rem;
+    border-radius: 12px;
+    width: fit-content;
+
+    button {
+        padding: 0.5rem 1.5rem;
+        border-radius: 8px;
+        color: $text-secondary;
+        font-weight: 500;
+        transition: all 0.2s;
+
+        &:hover {
+            color: $text;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        &.active {
+            background: $text;
+            color: $background;
+            font-weight: 600;
+        }
+    }
+}

@@ -1,0 +1,201 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.container {
+    @include glass;
+    border-radius: $radius;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .header {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid $border;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .titleInfo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+
+            h3 {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: $text;
+            }
+
+            .icon {
+                color: $primary;
+            }
+        }
+    }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: $text-secondary;
+
+        .pageBtn {
+            padding: 2px 8px;
+            border: 1px solid $border;
+            border-radius: 4px;
+            color: $text;
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            &:not(:disabled):hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+        }
+    }
+
+    .tableWrapper {
+        width: 100%;
+        overflow-x: auto;
+
+        @include mobile {
+            display: none; // Hide table on mobile, show cards
+        }
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+        white-space: nowrap;
+
+        th {
+            text-align: left;
+            padding: 1.1rem 1.5rem;
+            color: $text-secondary;
+            font-weight: 700; // Increased weight
+            border-bottom: 1px solid $border;
+            background: rgba(0, 0, 0, 0.4); // Darker background
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid $border;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(59, 130, 246, 0.05); // Subtle primary tint
+        }
+
+        .height {
+            color: $primary;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            transition: opacity 0.2s;
+
+            &:hover {
+                opacity: 0.7;
+                text-decoration: underline;
+            }
+        }
+
+        .time {
+            color: $text-secondary;
+        }
+    }
+
+    .hashWrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .hash {
+            color: $text-secondary;
+            font-family: 'JetBrains Mono', monospace;
+            transition: color 0.2s;
+
+            &:hover {
+                color: $primary;
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .minerInfo {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .miner {
+            color: $text;
+            font-size: 0.85rem;
+        }
+
+        .fees {
+            color: $success;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+    }
+}
+
+// Mobile Card View
+.mobileCards {
+    display: none;
+    padding: 1rem;
+    gap: 1rem;
+    flex-direction: column;
+
+    @include mobile {
+        display: flex;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid $border;
+        border-radius: 12px;
+        padding: 1rem;
+
+        .cardHeader {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+
+            .height {
+                color: $primary;
+                font-weight: 700;
+                transition: opacity 0.2s;
+
+                &:hover {
+                    opacity: 0.7;
+                    text-decoration: underline;
+                }
+            }
+
+            .time {
+                font-size: 0.8rem;
+                color: $text-secondary;
+            }
+        }
+
+        .cardRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+
+            .label {
+                color: $text-secondary;
+            }
+        }
+    }
+}

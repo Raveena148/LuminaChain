@@ -1,0 +1,142 @@
+@use '../../styles/mixins' as *;
+@use '../../styles/variables' as *;
+
+.container {
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    .titleInfo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .icon {
+            color: $primary;
+        }
+    }
+}
+
+.tableWrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: rgba(17, 24, 39, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    white-space: nowrap;
+
+    th {
+        text-align: left;
+        padding: 1rem 1.5rem;
+        color: $text-secondary;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    td {
+        padding: 1rem 1.5rem;
+        color: white;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+    }
+}
+
+.hash {
+    font-family: 'Roboto Mono', monospace;
+    color: $primary;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.address {
+    font-family: 'Roboto Mono', monospace;
+    color: $text-secondary;
+    font-size: 0.85rem;
+    display: block;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.value {
+    font-weight: 600;
+    color: $success;
+}
+
+.time {
+    color: $text-secondary;
+    font-size: 0.85rem;
+}
+
+@include mobile {
+    .tableWrapper {
+        display: none;
+    }
+}
+
+.mobileCards {
+    display: none;
+    gap: 1rem;
+
+    @include mobile {
+        display: grid;
+    }
+}
+
+.card {
+    background: rgba(17, 24, 39, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 12px;
+
+    .cardHeader {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .cardRow {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+
+        .label {
+            color: $text-secondary;
+        }
+    }
+}

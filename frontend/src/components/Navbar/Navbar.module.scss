@@ -1,0 +1,94 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.navbar {
+    height: $header-height;
+    border-bottom: 1px solid $border;
+    background: rgba(15, 23, 42, 0.8); // Fallback safe method
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+
+    .content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+
+        @include mobile {
+            gap: 1rem;
+        }
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+
+        @include mobile {
+            font-size: 1.1rem;
+        }
+    }
+
+    .links {
+        display: flex;
+        gap: 2rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: $text-secondary;
+
+        @include mobile {
+            display: none; // Hide links on mobile for simplicity, or move to drawer
+        }
+
+        a:hover {
+            color: white;
+            transition: color 0.2s;
+        }
+    }
+
+    .search {
+        position: relative;
+        display: flex;
+        align-items: center;
+
+        @include mobile {
+            width: 100%; // Expand on mobile if needed
+            max-width: 200px;
+        }
+
+        .searchIcon {
+            position: absolute;
+            left: 12px;
+            color: $text-secondary;
+        }
+
+        input {
+            @include glass(0.4);
+            border: 1px solid $border;
+            border-radius: 8px;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            color: white;
+            width: 300px;
+            outline: none;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+
+            @include mobile {
+                width: 100%;
+            }
+
+            &:focus {
+                border-color: $primary;
+                box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+                background: rgba(15, 23, 42, 0.8);
+            }
+        }
+    }
+}
