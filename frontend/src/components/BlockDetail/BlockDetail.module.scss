@@ -1,0 +1,340 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    text-align: center;
+
+    .loaderWrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+
+        .loader {
+            color: $primary;
+        }
+    }
+
+    p {
+        color: rgba(255, 255, 255, 0.6);
+    }
+}
+
+.skeletonCard {
+    height: 200px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 0.5;
+    }
+}
+
+.errorContainer {
+    padding: 4rem 1rem;
+    text-align: center;
+
+    .errorCard {
+        max-width: 600px;
+        margin: 0 auto;
+
+        .errorIcon {
+            color: $error;
+            margin-bottom: 1.5rem;
+            font-size: 3rem;
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2rem;
+        }
+    }
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover {
+        color: white;
+    }
+}
+
+.hero {
+    text-align: left;
+    padding: 0 0 3rem;
+
+    .titleWrapper {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        .primaryIcon {
+            color: $primary;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+    }
+
+    .subtitle {
+        margin-left: 3rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+}
+
+.mainGrid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+    align-items: start;
+
+    @include mobile {
+        grid-template-columns: 1fr;
+    }
+}
+
+.leftCol {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.aside {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.cardTitle {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.secondaryIcon {
+    color: $secondary;
+}
+
+.successIcon {
+    color: $success;
+}
+
+.valueHighlight {
+    font-size: 1.1rem;
+    color: $primary;
+    font-weight: 500;
+}
+
+.warningIcon {
+    color: $warning;
+}
+
+.noMargin {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.emptyCell {
+    padding: 2rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.detailRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    .label {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+    }
+
+    .value {
+        color: white;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    &.vertical {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .label {
+            margin-bottom: 0.5rem;
+        }
+
+        .valueWrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+
+            .hashValue {
+                font-family: 'JetBrains Mono', monospace;
+                word-break: break-all;
+                text-align: left;
+                flex: 1;
+                color: rgba(255, 255, 255, 0.8);
+            }
+        }
+    }
+}
+
+.transactionCard {
+    padding: 0;
+    overflow: hidden;
+    margin-top: 2rem;
+
+    .cardHeader {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+    }
+}
+
+.tableWrapper {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+
+    th {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+    }
+
+    td {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+
+        &.hash {
+            font-family: 'JetBrains Mono', monospace;
+            color: $primary;
+        }
+
+        &.value {
+            color: $success;
+            font-weight: 600;
+        }
+
+        &.addressCell {
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+
+            span {
+                display: block;
+                max-width: 15rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+}
+
+.externalCard {
+    text-align: center;
+
+    .iconWrapper {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(59, 130, 246, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+
+    p {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin: 1rem 0;
+    }
+
+    button {
+        width: 100%;
+        font-size: 0.8rem;
+    }
+}
+
+.summaryList {
+    display: grid;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+
+    .summaryRow {
+        display: flex;
+        justify-content: space-between;
+
+        .label {
+            color: rgba(255, 255, 255, 0.5);
+        }
+    }
+}

@@ -1,0 +1,311 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.hero {
+    text-align: center;
+    padding: 0 0 2rem;
+
+    h1 {
+        margin-bottom: 0.5rem;
+    }
+}
+
+.loadingWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+
+    .loaderContent {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+
+        .spinner {
+            color: $primary;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+    }
+}
+
+.skeletonBlock {
+    height: 300px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    animation: analyticsPulse 2s infinite ease-in-out;
+}
+
+@keyframes analyticsPulse {
+    0% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 0.4;
+    }
+}
+
+.networkGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.networkCard {
+    position: relative;
+    overflow: hidden;
+
+    .cardBgIcon {
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        opacity: 0.05;
+        pointer-events: none;
+
+        color: $primary; // Default
+
+        &.eth {
+            color: #627eea;
+        }
+
+        &.btc {
+            color: #f7931a;
+        }
+    }
+
+    .cardHeader {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+
+        .cardTitle {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0;
+
+            .iconBox {
+                padding: 8px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                &.ethTheme {
+                    background: rgba(98, 126, 234, 0.1);
+                    color: #627eea;
+                }
+
+                &.btcTheme {
+                    background: rgba(247, 147, 26, 0.1);
+                    color: #f7931a;
+                }
+            }
+        }
+
+        .statusBadge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+
+            &.live {
+                color: $success;
+                background: rgba(16, 185, 129, 0.1);
+            }
+
+            &.syncing {
+                color: $warning;
+                background: rgba(245, 158, 11, 0.1);
+            }
+        }
+    }
+
+    .statsGrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+
+        .statItem {
+            .ethVolume {
+                color: $success;
+            }
+
+            .btcVolume {
+                color: $warning;
+            }
+
+            p {
+                color: #94a3b8;
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            h2 {
+                margin: 0;
+            }
+        }
+    }
+}
+
+.visualGrid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+
+    @include mobile {
+        grid-template-columns: 1fr;
+    }
+}
+
+.propagationCard {
+    .propHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+
+        .legend {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+
+            .legendItem {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+
+                .dot {
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 2px;
+
+                    &.ethDot {
+                        background: #3b82f6;
+                    }
+
+                    &.btcDot {
+                        background: #f59e0b;
+                    }
+                }
+            }
+        }
+    }
+
+    .graphContainer {
+        height: 300px;
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        padding-bottom: 20px;
+
+        .barWrapper {
+            flex: 1;
+            background-color: rgba(59, 130, 246, 0.1);
+            border-radius: 4px;
+            position: relative;
+            height: 100%;
+
+            .ethBar {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                border-radius: 4px;
+                opacity: 0.8;
+                background: linear-gradient(to top, #3b82f6, #60a5fa);
+            }
+
+            .btcBar {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                border-radius: 4px;
+                opacity: 0.8;
+                left: 20%;
+                background: #f59e0b;
+            }
+        }
+    }
+}
+
+.performanceCard {
+    .perfList {
+        display: grid;
+        gap: 1.5rem;
+
+        .perfItem {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            .perfIcon {
+                padding: 10px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                &.cpuTheme {
+                    background: rgba(139, 92, 246, 0.1);
+                    color: #8b5cf6;
+                }
+
+                &.latencyTheme {
+                    background: rgba(16, 185, 129, 0.1);
+                    color: #10b981;
+                }
+
+                &.storageTheme {
+                    background: rgba(244, 63, 94, 0.1);
+                    color: #f43f5e;
+                }
+            }
+
+            .perfContent {
+                flex: 1;
+
+                .perfLabel {
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 0.85rem;
+                    margin-bottom: 5px;
+                }
+
+                .progressBar {
+                    width: 100%;
+                    height: 4px;
+                    background: rgba(255, 255, 255, 0.05);
+                    border-radius: 2px;
+
+                    .fill {
+                        height: 100%;
+                        border-radius: 2px;
+
+                        &.cpuTheme {
+                            background: #8b5cf6;
+                        }
+
+                        &.latencyTheme {
+                            background: #10b981;
+                        }
+
+                        &.storageTheme {
+                            background: #f43f5e;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

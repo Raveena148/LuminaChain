@@ -28,9 +28,9 @@ export class RealtimeService {
     }
 
     private async init() {
-        // Fetch some initial REAL history so the user doesn't wait for a new block (BTC can take 10m+)
-        await this.fetchInitialBtcBlocks();
-        await this.fetchInitialEthBlocks();
+        // Let indexers handle history to ensure full transaction data is included
+        // await this.fetchInitialBtcBlocks();
+        // await this.fetchInitialEthBlocks();
 
         // Start live streams
         this.startBtcStream();

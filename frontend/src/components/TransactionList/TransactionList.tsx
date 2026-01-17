@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
 import styles from './TransactionList.module.scss';
 import { ArrowRightLeft } from 'lucide-react';
 import { api } from '@/utils/api';
-import { Loader, NoData } from '../UI/Status/Status';
+import { Loader } from '../UI/Status/Status';
+import { TransactionListItem, TransactionCardItem } from './TransactionItems';
 
 interface Transaction {
     id: number;
@@ -30,7 +30,6 @@ const TransactionList: React.FC<TransactionListProps> = ({ network }) => {
             try {
                 setLoading(true);
                 const res = await api.getHistory(network, 1);
-                // Handle both array or { rows: ... } response from findAndCountAll
                 const data = Array.isArray(res.data) ? res.data : (res.data.rows || []);
                 setTransactions(data.slice(0, 10));
             } catch (error) {
@@ -44,7 +43,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ network }) => {
     }, [network]);
 
     if (loading) return <Loader />;
-    if (!transactions.length) return null; // Don't show empty table if no data
+    if (!transactions.length) return null;
 
     return (
         <div className={styles.container}>
@@ -68,57 +67,15 @@ const TransactionList: React.FC<TransactionListProps> = ({ network }) => {
                     </thead>
                     <tbody>
                         {transactions.map(tx => (
-                            <tr key={tx.id || tx.txHash}>
-                                <td>
-                                    <Link href={`/tx/${network.toLowerCase()}/${tx.txHash}`} className={styles.hash}>
-                                        {tx.txHash.substring(0, 14)}...
-                                    </Link>
-                                </td>
-                                <td>
-                                    <span className={styles.address} title={tx.fromAddress}>
-                                        {tx.fromAddress ? `${tx.fromAddress.substring(0, 8)}...` : 'N/A'}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span className={styles.address} title={tx.toAddress}>
-                                        {tx.toAddress ? `${tx.toAddress.substring(0, 8)}...` : 'N/A'}
-                                    </span>
-                                </td>
-                                <td className={styles.value}>
-                                    {parseFloat(tx.value).toFixed(6)} {network === 'ETH' ? 'ETH' : 'BTC'}
-                                </td>
-                                <td className={styles.time}>
-                                    {new Date(tx.timestamp).toLocaleTimeString()}
-                                </td>
-                            </tr>
+                            <TransactionListItem key={tx.id || tx.txHash} tx={tx} network={network} />
                         ))}
                     </tbody>
                 </table>
             </div>
 
-            {/* Mobile Cards */}
             <div className={styles.mobileCards}>
                 {transactions.map(tx => (
-                    <div key={tx.id || tx.txHash} className={styles.card}>
-                        <div className={styles.cardHeader}>
-                            <Link href={`/tx/${network.toLowerCase()}/${tx.txHash}`} className={styles.hash}>
-                                {tx.txHash.substring(0, 14)}...
-                            </Link>
-                            <span className={styles.time}>{new Date(tx.timestamp).toLocaleTimeString()}</span>
-                        </div>
-                        <div className={styles.cardRow}>
-                            <span className={styles.label}>From</span>
-                            <span className={styles.address}>{tx.fromAddress ? `${tx.fromAddress.substring(0, 8)}...` : 'N/A'}</span>
-                        </div>
-                        <div className={styles.cardRow}>
-                            <span className={styles.label}>To</span>
-                            <span className={styles.address}>{tx.toAddress ? `${tx.toAddress.substring(0, 8)}...` : 'N/A'}</span>
-                        </div>
-                        <div className={styles.cardRow}>
-                            <span className={styles.label}>Value</span>
-                            <span className={styles.value}>{parseFloat(tx.value).toFixed(6)}</span>
-                        </div>
-                    </div>
+                    <TransactionCardItem key={tx.id || tx.txHash} tx={tx} network={network} />
                 ))}
             </div>
         </div>
