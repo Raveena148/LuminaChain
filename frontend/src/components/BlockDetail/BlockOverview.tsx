@@ -9,6 +9,8 @@ interface BlockOverviewProps {
     transactionsCount: number;
 }
 
+import { formatNumber, formatDateTime, formatSize } from '@/utils/helpers';
+
 const BlockOverview: React.FC<BlockOverviewProps> = ({ block, transactionsCount }) => {
     return (
         <div className="glass-card">
@@ -18,13 +20,13 @@ const BlockOverview: React.FC<BlockOverviewProps> = ({ block, transactionsCount 
             <div className={styles.detailRow}>
                 <span className={styles.label}>Block Height</span>
                 <span className={styles.valueHighlight}>
-                    {Number(block.blockNumber).toLocaleString()}
+                    {formatNumber(block.blockNumber)}
                 </span>
             </div>
             <div className={styles.detailRow}>
                 <span className={styles.label}>Timestamp</span>
                 <span className={styles.value}>
-                    <Clock size={16} /> {new Date(block.timestamp).toLocaleString()}
+                    <Clock size={16} /> {formatDateTime(block.timestamp)}
                 </span>
             </div>
             <div className={styles.detailRow}>
@@ -33,7 +35,7 @@ const BlockOverview: React.FC<BlockOverviewProps> = ({ block, transactionsCount 
             </div>
             <div className={styles.detailRow}>
                 <span className={styles.label}>Block Size</span>
-                <span className={styles.value}>{(block.size / 1024).toFixed(2)} KB</span>
+                <span className={styles.value}>{formatSize(block.size)}</span>
             </div>
         </div>
     );

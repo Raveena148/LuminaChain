@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import styles from './TransactionList.module.scss';
+import { truncateHash, formatTime, getNetworkSlug } from '@/utils/helpers';
 
 interface Transaction {
     id: number;
@@ -20,49 +21,51 @@ interface TransactionItemProps {
 }
 
 export const TransactionListItem: React.FC<TransactionItemProps> = ({ tx, network }) => {
+    const networkSlug = getNetworkSlug(network);
     return (
         <tr key={tx.id || tx.txHash}>
             <td>
-                <Link href={`/tx/${network.toLowerCase()}/${tx.txHash}`} className={styles.hash}>
-                    {tx.txHash.substring(0, 14)}...
+                <Link href={`/tx/${networkSlug}/${tx.txHash}`} className={styles.hash}>
+                    {truncateHash(tx.txHash, 14, 0)}
                 </Link>
             </td>
             <td>
                 <span className={styles.address} title={tx.fromAddress}>
-                    {tx.fromAddress ? `${tx.fromAddress.substring(0, 8)}...` : 'N/A'}
+                    {tx.fromAddress ? truncateHash(tx.fromAddress, 8, 0) : 'N/A'}
                 </span>
             </td>
             <td>
                 <span className={styles.address} title={tx.toAddress}>
-                    {tx.toAddress ? `${tx.toAddress.substring(0, 8)}...` : 'N/A'}
+                    {tx.toAddress ? truncateHash(tx.toAddress, 8, 0) : 'N/A'}
                 </span>
             </td>
             <td className={styles.value}>
-                {parseFloat(tx.value).toFixed(6)} {network === 'ETH' ? 'ETH' : 'BTC'}
+                {parseFloat(tx.value).toFixed(6)} {network.toUpperCase().includes('ETH') ? 'ETH' : 'BTC'}
             </td>
             <td className={styles.time}>
-                {new Date(tx.timestamp).toLocaleTimeString()}
+                {formatTime(tx.timestamp)}
             </td>
         </tr>
     );
 };
 
 export const TransactionCardItem: React.FC<TransactionItemProps> = ({ tx, network }) => {
+    const networkSlug = getNetworkSlug(network);
     return (
         <div key={tx.id || tx.txHash} className={styles.card}>
             <div className={styles.cardHeader}>
-                <Link href={`/tx/${network.toLowerCase()}/${tx.txHash}`} className={styles.hash}>
-                    {tx.txHash.substring(0, 14)}...
+                <Link href={`/tx/${networkSlug}/${tx.txHash}`} className={styles.hash}>
+                    {truncateHash(tx.txHash, 14, 0)}
                 </Link>
-                <span className={styles.time}>{new Date(tx.timestamp).toLocaleTimeString()}</span>
+                <span className={styles.time}>{formatTime(tx.timestamp)}</span>
             </div>
             <div className={styles.cardRow}>
                 <span className={styles.label}>From</span>
-                <span className={styles.address}>{tx.fromAddress ? `${tx.fromAddress.substring(0, 8)}...` : 'N/A'}</span>
+                <span className={styles.address}>{tx.fromAddress ? truncateHash(tx.fromAddress, 8, 0) : 'N/A'}</span>
             </div>
             <div className={styles.cardRow}>
                 <span className={styles.label}>To</span>
-                <span className={styles.address}>{tx.toAddress ? `${tx.toAddress.substring(0, 8)}...` : 'N/A'}</span>
+                <span className={styles.address}>{tx.toAddress ? truncateHash(tx.toAddress, 8, 0) : 'N/A'}</span>
             </div>
             <div className={styles.cardRow}>
                 <span className={styles.label}>Value</span>

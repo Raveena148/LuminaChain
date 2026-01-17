@@ -12,7 +12,6 @@ const NetworkCard = dynamic(() => import('@/components/Analytics/NetworkCard'), 
     loading: () => <div className={styles.skeletonBlock} />
 });
 const PropagationHealth = dynamic(() => import('@/components/Analytics/PropagationHealth'));
-const PerformanceMetrics = dynamic(() => import('@/components/Analytics/PerformanceMetrics'));
 
 export default function AnalyticsPage() {
     const [stats, setStats] = useState<any>(null);
@@ -62,9 +61,8 @@ export default function AnalyticsPage() {
                 {btcStats && <NetworkCard type="BTC" stats={btcStats} />}
             </section>
 
-            <section className={styles.visualGrid}>
-                <PropagationHealth />
-                <PerformanceMetrics />
+            <section className={styles.chartSection}>
+                <PropagationHealth ethStats={ethStats} btcStats={btcStats} />
             </section>
         </div>
     );

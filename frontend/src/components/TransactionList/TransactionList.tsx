@@ -21,6 +21,8 @@ interface TransactionListProps {
     network: string;
 }
 
+import { PAGINATION, NETWORKS } from '@/utils/constants';
+
 const TransactionList: React.FC<TransactionListProps> = ({ network }) => {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState(true);
@@ -31,7 +33,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ network }) => {
                 setLoading(true);
                 const res = await api.getHistory(network, 1);
                 const data = Array.isArray(res.data) ? res.data : (res.data.rows || []);
-                setTransactions(data.slice(0, 10));
+                setTransactions(data.slice(0, PAGINATION.ITEMS_PER_PAGE));
             } catch (error) {
                 console.error('Failed to fetch transactions', error);
             } finally {
@@ -50,7 +52,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ network }) => {
             <div className={styles.header}>
                 <div className={styles.titleInfo}>
                     <ArrowRightLeft className={styles.icon} size={20} />
-                    <h3>Recent {network === 'ETH' ? 'Ethereum' : 'Bitcoin'} Transactions</h3>
+                    <h3>Recent {network.toUpperCase().includes('ETH') ? NETWORKS.ETH : NETWORKS.BTC} Transactions</h3>
                 </div>
             </div>
 

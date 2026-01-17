@@ -5,6 +5,9 @@ import { api } from '@/utils/api';
 import styles from './AnalyticsNavbar.module.scss';
 import { Activity, Globe, Zap, Database, TrendingUp } from 'lucide-react';
 
+import { REFRESH_INTERVALS } from '@/utils/constants';
+import { formatNumber } from '@/utils/helpers';
+
 const AnalyticsNavbar: React.FC = () => {
     const [stats, setStats] = useState<any>(null);
 
@@ -19,7 +22,7 @@ const AnalyticsNavbar: React.FC = () => {
 
     useEffect(() => {
         fetchStats();
-        const interval = setInterval(fetchStats, 30000); // Update every 30s
+        const interval = setInterval(fetchStats, REFRESH_INTERVALS.ANALYTICS); // Update every 30s
         return () => clearInterval(interval);
     }, []);
 
@@ -37,7 +40,7 @@ const AnalyticsNavbar: React.FC = () => {
                 <div className={`${styles.statItem} glass-card`}>
                     <TrendingUp size={14} className="text-secondary" />
                     <span className={styles.label}>ETH Volume</span>
-                    <span className={styles.value}>{Number(stats.eth.volume24h).toLocaleString()} ETH</span>
+                    <span className={styles.value}>{formatNumber(stats.eth.volume24h)} ETH</span>
                 </div>
 
                 <div className={`${styles.statItem} glass-card`}>
@@ -49,7 +52,7 @@ const AnalyticsNavbar: React.FC = () => {
                 <div className={`${styles.statItem} glass-card`}>
                     <Zap size={14} className="text-warning" />
                     <span className={styles.label}>Global TXs</span>
-                    <span className={styles.value}>{stats.global.totalTxs.toLocaleString()}</span>
+                    <span className={styles.value}>{formatNumber(stats.global.totalTxs)}</span>
                 </div>
 
                 <div className={`${styles.statItem} glass-card`}>

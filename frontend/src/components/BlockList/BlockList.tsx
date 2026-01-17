@@ -5,6 +5,8 @@ import styles from './BlockList.module.scss';
 import { Box } from 'lucide-react';
 import { Loader, NoData } from '../UI/Status/Status';
 import { BlockListItem, BlockCardItem } from './BlockListItems';
+import { PAGINATION } from '@/utils/constants';
+import { getNetworkSlug } from '@/utils/helpers';
 
 interface Block {
     id: number | string;
@@ -24,18 +26,15 @@ interface BlockListProps {
     loading?: boolean;
 }
 
-const ITEMS_PER_PAGE = 10;
-
 const BlockList = ({ blocks, network, loading }: BlockListProps) => {
     const [page, setPage] = useState(1);
 
     if (loading) return <Loader />;
     if (!blocks || blocks.length === 0) return <NoData />;
 
-    const totalPages = Math.ceil(blocks.length / ITEMS_PER_PAGE);
-    const paginatedBlocks = blocks.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(blocks.length / PAGINATION.ITEMS_PER_PAGE);
+    const paginatedBlocks = blocks.slice((page - 1) * PAGINATION.ITEMS_PER_PAGE, page * PAGINATION.ITEMS_PER_PAGE);
 
-    const getSlug = (net: string) => net.toLowerCase().includes('eth') ? 'eth' : 'btc';
 
     return (
         <div className={styles.container}>
@@ -84,7 +83,7 @@ const BlockList = ({ blocks, network, loading }: BlockListProps) => {
                                 key={block.id}
                                 block={block}
                                 network={network}
-                                getSlug={getSlug}
+                                getSlug={getNetworkSlug}
                             />
                         ))}
                     </tbody>
@@ -97,7 +96,7 @@ const BlockList = ({ blocks, network, loading }: BlockListProps) => {
                         key={block.id}
                         block={block}
                         network={network}
-                        getSlug={getSlug}
+                        getSlug={getNetworkSlug}
                     />
                 ))}
             </div>

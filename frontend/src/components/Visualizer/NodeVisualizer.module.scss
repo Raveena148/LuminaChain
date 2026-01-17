@@ -1,0 +1,274 @@
+.container {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    background: #08090a;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mapWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mapImage {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.8;
+    filter: brightness(1.2) contrast(1.1);
+}
+
+// Node Styles
+.node {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    cursor: pointer;
+    pointer-events: auto;
+
+    &::after {
+        content: '';
+        position: absolute;
+        width: 300%;
+        height: 300%;
+        top: -100%;
+        left: -100%;
+        background: inherit;
+        border-radius: 50%;
+        opacity: 0.3;
+        animation: pulse 2s infinite ease-out;
+    }
+
+    &:hover .tooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, -100%) translateY(-10px);
+    }
+}
+
+// Tooltip Styles
+.tooltip {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -100%) translateY(0);
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    color: white;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 30;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.tooltipHeader {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 4px;
+
+    strong {
+        font-size: 0.8rem;
+        color: #fff;
+    }
+}
+
+.colorDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.tooltipContent {
+    opacity: 0.8;
+    font-size: 0.7rem;
+
+    div {
+        margin: 2px 0;
+    }
+}
+
+// Overlay (Stats HUD)
+.overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    pointer-events: none;
+    z-index: 20;
+
+    .glass-card {
+        padding: 15px 25px;
+        min-width: 300px;
+    }
+}
+
+.hudTitle {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.statusDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+}
+
+.hudDescription {
+    margin: 0 0 15px 0;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.4;
+}
+
+.stats {
+    display: flex;
+    gap: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
+}
+
+.statItem {
+    div:first-child {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    div:last-child {
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+}
+
+.statValue {
+    color: #3b82f6;
+}
+
+.statValueGreen {
+    color: #10b981;
+}
+
+// Legend
+.legend {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .glass-card {
+        padding: 12px 18px;
+    }
+}
+
+.legendTitle {
+    margin: 0 0 10px 0;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.legendItems {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+}
+
+.legendDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+// Bottom Info (Live Status)
+.bottomInfo {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    pointer-events: none;
+    z-index: 20;
+
+    .glass-card {
+        padding: 10px 20px;
+        font-size: 0.85rem;
+    }
+}
+
+.liveStatus {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.livePulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+    animation: livePulseAnim 1.5s infinite;
+}
+
+// Animations
+@keyframes pulse {
+    0% {
+        transform: scale(0.5);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+@keyframes livePulseAnim {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

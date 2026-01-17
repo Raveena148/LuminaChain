@@ -1,7 +1,7 @@
 import axios from 'axios';
+import { API_CONFIG } from './constants';
 
-// Environment Handling
-const RAW_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
+const RAW_BASE_URL = API_CONFIG.BASE_URL;
 const API_BASE_URL = RAW_BASE_URL.endsWith('/api') ? RAW_BASE_URL : `${RAW_BASE_URL}/api`;
 
 console.log(`🔌 Initializing API Client at: ${API_BASE_URL}`);
@@ -9,7 +9,7 @@ console.log(`🔌 Initializing API Client at: ${API_BASE_URL}`);
 // Create Axios Instance
 const apiClient = axios.create({
     baseURL: API_BASE_URL,
-    timeout: 10000,
+    timeout: API_CONFIG.TIMEOUT,
     headers: {
         'Content-Type': 'application/json',
     },

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import GlobeVisualizer from '@/components/Visualizer/GlobeVisualizer';
+import NodeVisualizer from '@/components/Visualizer/NodeVisualizer';
 import { ArrowLeft } from 'lucide-react';
 import styles from '../page.module.scss';
 
@@ -15,13 +15,13 @@ export default function Visualizer() {
                 <ArrowLeft size={18} /> Back to Dashboard
             </Link>
 
-            <header className={styles.hero} style={{ textAlign: 'left', padding: '0 0 2rem' }}>
+            <header className={styles.hero} style={{ textAlign: 'center', padding: '0 0 2rem' }}>
                 <h1 className="gradient-text">Global Node Visualizer</h1>
                 <p>Tracking P2P propagation and network health across the decentralized web.</p>
             </header>
 
             <div className="glass-card" style={{ padding: 0, overflow: 'hidden', height: '600px', position: 'relative' }}>
-                <GlobeVisualizer />
+                <NodeVisualizer />
             </div>
 
             <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>

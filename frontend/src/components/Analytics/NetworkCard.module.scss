@@ -1,0 +1,101 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.networkCard {
+    position: relative;
+    overflow: hidden;
+    padding: 1.5rem;
+}
+
+.cardBgIcon {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    opacity: 0.05;
+    pointer-events: none;
+    color: $primary;
+
+    &.eth {
+        color: #627eea;
+    }
+
+    &.btc {
+        color: #f7931a;
+    }
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.cardTitle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.iconBox {
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.ethTheme {
+        background: rgba(98, 126, 234, 0.1);
+        color: #627eea;
+    }
+
+    &.btcTheme {
+        background: rgba(247, 147, 26, 0.1);
+        color: #f7931a;
+    }
+}
+
+.statusBadge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+
+    &.live {
+        color: $success;
+        background: rgba(16, 185, 129, 0.1);
+    }
+
+    &.syncing {
+        color: $warning;
+        background: rgba(245, 158, 11, 0.1);
+    }
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.statItem {
+    p {
+        color: #94a3b8;
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    h2 {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+}
+
+.ethVolume {
+    color: $success;
+}
+
+.btcVolume {
+    color: $warning;
+}

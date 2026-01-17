@@ -7,7 +7,6 @@ import { useRealtimeBlocks } from '@/hooks/useRealtimeBlocks';
 import styles from './page.module.scss';
 
 // Dynamic imports for better bundle splitting and performance
-const SystemHealth = dynamic(() => import('@/components/Dashboard/SystemHealth'), { ssr: false });
 const DashboardStats = dynamic(() => import('@/components/Dashboard/DashboardStats'), { ssr: false });
 const Tabs = dynamic(() => import('@/components/Tabs/Tabs'), { ssr: false });
 const BlockList = dynamic(() => import('@/components/BlockList/BlockList'), { ssr: false });
@@ -80,8 +79,6 @@ export default function Home() {
           <h1 className="gradient-text">LuminaChain Analytics</h1>
           <p>Real-Time Blockchain Intelligence</p>
         </header>
-
-        <SystemHealth status={stats.status} connected={connected} />
 
         <DashboardStats
           ethHeight={stats.ethHeight}

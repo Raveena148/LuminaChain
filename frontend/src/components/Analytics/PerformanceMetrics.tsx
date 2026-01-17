@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { Cpu, Globe, Database } from 'lucide-react';
-import styles from './Analytics.module.scss';
+import styles from './PerformanceMetrics.module.scss';
 
 const PerformanceMetrics: React.FC = () => {
     // React 18: useMemo for static data

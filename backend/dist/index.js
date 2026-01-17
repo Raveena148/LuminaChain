@@ -36,12 +36,13 @@ const startServer = async () => {
             console.log(`Server running on port ${PORT}`);
         });
         // Start Legacy Indexers (Background)
+        // Start Legacy Indexers (Background)
         if (process.env.ENABLE_ETH_INDEXER === 'true') {
-            const ethIndexer = new EthIndexer(process.env.ETH_RPC_URL || 'https://mainnet.infura.io/v3/your-project-id');
+            const ethIndexer = new EthIndexer(process.env.ETH_RPC_URL || 'https://mainnet.infura.io/v3/your-project-id', io);
             ethIndexer.start();
         }
         if (process.env.ENABLE_BTC_INDEXER === 'true') {
-            const btcIndexer = new BtcIndexer(process.env.BTC_RPC_URL || 'http://user:pass@localhost:8332');
+            const btcIndexer = new BtcIndexer(process.env.BTC_RPC_URL || 'http://user:pass@localhost:8332', io);
             btcIndexer.start();
         }
     }

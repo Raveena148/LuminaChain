@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { Activity, Zap, Database, BarChart3 } from 'lucide-react';
-import styles from './Analytics.module.scss';
+import styles from './NetworkCard.module.scss';
 
 interface NetworkCardProps {
     type: 'ETH' | 'BTC';

@@ -2,6 +2,8 @@ import WebSocket from 'ws';
 import axios from 'axios';
 import Block from '../models/Block.js';
 import Transaction from '../models/Transaction.js';
+import { NETWORKS, RPC_URLS, REFRESH_INTERVALS } from '../utils/constants.js';
+import { hexToInt, formatBaseFee, weiToEth } from '../utils/helpers.js';
 export class RealtimeService {
     io;
     btcWs = null;
@@ -11,9 +13,9 @@ export class RealtimeService {
         this.init();
     }
     async init() {
-        // Fetch some initial REAL history so the user doesn't wait for a new block (BTC can take 10m+)
-        await this.fetchInitialBtcBlocks();
-        await this.fetchInitialEthBlocks();
+        // Let indexers handle history to ensure full transaction data is included
+        // await this.fetchInitialBtcBlocks();
+        // await this.fetchInitialEthBlocks();
         // Start live streams
         this.startBtcStream();
         this.startEthStream();
@@ -21,11 +23,11 @@ export class RealtimeService {
     async fetchInitialBtcBlocks() {
         try {
             console.log('🔄 Fetching initial BTC history...');
-            const response = await axios.get('https://mempool.space/api/blocks');
+            const response = await axios.get(`${RPC_URLS.BTC_HTTP}/blocks`);
             const blocks = response.data.slice(0, 5);
             for (const b of blocks) {
                 await Block.upsert({
-                    network: 'BTC',
+                    network: NETWORKS.BTC,
                     blockNumber: b.height,
                     blockHash: b.id,
                     timestamp: new Date(b.timestamp * 1000),
@@ -43,18 +45,18 @@ export class RealtimeService {
         try {
             console.log('🔄 Fetching initial ETH history...');
             // Get latest block number
-            const bnRes = await axios.post('https://ethereum-rpc.publicnode.com', {
+            const bnRes = await axios.post(RPC_URLS.ETH_HTTP, {
                 jsonrpc: '2.0',
                 id: 1,
                 method: 'eth_blockNumber',
                 params: []
             });
             const latestHex = bnRes.data.result;
-            const latest = parseInt(latestHex, 16);
+            const latest = hexToInt(latestHex);
             // Fetch last 5
             for (let i = 0; i < 5; i++) {
                 const hexNum = '0x' + (latest - i).toString(16);
-                const bRes = await axios.post('https://ethereum-rpc.publicnode.com', {
+                const bRes = await axios.post(RPC_URLS.ETH_HTTP, {
                     jsonrpc: '2.0',
                     id: 1,
                     method: 'eth_getBlockByNumber',
@@ -63,12 +65,12 @@ export class RealtimeService {
                 const b = bRes.data.result;
                 if (b) {
                     await Block.upsert({
-                        network: 'ETH',
-                        blockNumber: parseInt(b.number, 16),
+                        network: NETWORKS.ETH,
+                        blockNumber: hexToInt(b.number),
                         blockHash: b.hash,
-                        timestamp: new Date(parseInt(b.timestamp, 16) * 1000),
+                        timestamp: new Date(hexToInt(b.timestamp) * 1000),
                         txCount: b.transactions?.length || 0,
-                        size: parseInt(b.size || '0', 16)
+                        size: hexToInt(b.size || '0')
                     });
                 }
             }
@@ -81,7 +83,7 @@ export class RealtimeService {
     // --- Bitcoin Streaming (via Mempool.space WS) ---
     startBtcStream() {
         try {
-            this.btcWs = new WebSocket('wss://mempool.space/api/v1/ws');
+            this.btcWs = new WebSocket(RPC_URLS.BTC_WS);
             this.btcWs.on('open', () => {
                 console.log('🔌 Connected to BTC WebSocket Feed (Mempool.space)');
                 this.btcWs?.send(JSON.stringify({ action: 'want-blocks' }));
@@ -94,8 +96,8 @@ export class RealtimeService {
             });
             this.btcWs.on('error', (err) => console.error('BTC WS Error:', err));
             this.btcWs.on('close', () => {
-                console.warn('BTC WS Closed. Reconnecting in 5s...');
-                setTimeout(() => this.startBtcStream(), 5000);
+                console.warn(`BTC WS Closed. Reconnecting in ${REFRESH_INTERVALS.RECONNECT_DELAY / 1000}s...`);
+                setTimeout(() => this.startBtcStream(), REFRESH_INTERVALS.RECONNECT_DELAY);
             });
         }
         catch (e) {
@@ -105,7 +107,7 @@ export class RealtimeService {
     async processBtcBlock(rawBlock) {
         console.log(`✅ Received BTC Block: #${rawBlock.height}`);
         const block = {
-            network: 'BTC',
+            network: NETWORKS.BTC,
             height: rawBlock.height,
             hash: rawBlock.id,
             timestamp: rawBlock.timestamp * 1000,
@@ -116,7 +118,7 @@ export class RealtimeService {
         // Persist to DB
         try {
             await Block.upsert({
-                network: 'BTC',
+                network: NETWORKS.BTC,
                 blockNumber: block.height,
                 blockHash: block.hash,
                 timestamp: new Date(block.timestamp),
@@ -132,7 +134,7 @@ export class RealtimeService {
     // --- Ethereum Streaming (via Public RPC WS) ---
     startEthStream() {
         try {
-            this.ethWs = new WebSocket('wss://ethereum-rpc.publicnode.com');
+            this.ethWs = new WebSocket(RPC_URLS.ETH_WS);
             this.ethWs.on('open', () => {
                 console.log('🔌 Connected to ETH WebSocket Feed');
                 const subRequest = {
@@ -151,8 +153,8 @@ export class RealtimeService {
             });
             this.ethWs.on('error', (err) => console.error('ETH WS Error:', err));
             this.ethWs.on('close', () => {
-                console.warn('ETH WS Closed. Reconnecting in 5s...');
-                setTimeout(() => this.startEthStream(), 5000);
+                console.warn(`ETH WS Closed. Reconnecting in ${REFRESH_INTERVALS.RECONNECT_DELAY / 1000}s...`);
+                setTimeout(() => this.startEthStream(), REFRESH_INTERVALS.RECONNECT_DELAY);
             });
         }
         catch (e) {
@@ -160,11 +162,11 @@ export class RealtimeService {
         }
     }
     async processEthHeader(header) {
-        const blockNumber = parseInt(header.number, 16);
+        const blockNumber = hexToInt(header.number);
         console.log(`✅ Received ETH Header: #${blockNumber}`);
         try {
             // To get txCount and size, we need to fetch the full block
-            const response = await axios.post('https://ethereum-rpc.publicnode.com', {
+            const response = await axios.post(RPC_URLS.ETH_HTTP, {
                 jsonrpc: '2.0',
                 id: 1,
                 method: 'eth_getBlockByNumber',
@@ -172,18 +174,18 @@ export class RealtimeService {
             });
             const fullBlock = response.data.result;
             const block = {
-                network: 'ETH',
+                network: NETWORKS.ETH,
                 height: blockNumber,
                 hash: header.hash,
-                timestamp: parseInt(header.timestamp, 16) * 1000,
+                timestamp: hexToInt(header.timestamp) * 1000,
                 txCount: fullBlock?.transactions?.length || 0,
-                size: parseInt(fullBlock?.size || '0', 16),
+                size: hexToInt(fullBlock?.size || '0'),
                 miner: header.miner,
-                fees: header.baseFeePerGas ? (parseInt(header.baseFeePerGas, 16) / 1e9).toFixed(2) + ' Gwei' : 'N/A',
+                fees: formatBaseFee(header.baseFeePerGas),
             };
             // Persist Block to DB
             await Block.upsert({
-                network: 'ETH',
+                network: NETWORKS.ETH,
                 blockNumber: block.height,
                 blockHash: block.hash,
                 timestamp: new Date(block.timestamp),
@@ -195,12 +197,12 @@ export class RealtimeService {
                 const txsToSave = fullBlock.transactions.slice(0, 10); // Limit to 10 for performance
                 for (const tx of txsToSave) {
                     await Transaction.upsert({
-                        network: 'ETH',
+                        network: NETWORKS.ETH,
                         txHash: tx.hash,
                         blockNumber: block.height,
                         fromAddress: tx.from,
                         toAddress: tx.to,
-                        value: (parseInt(tx.value, 16) / 1e18).toString(),
+                        value: weiToEth(tx.value),
                         timestamp: new Date(block.timestamp)
                     });
                 }
@@ -210,14 +212,14 @@ export class RealtimeService {
         catch (error) {
             console.error('Error fetching/persisting ETH block:', error);
             const fallbackBlock = {
-                network: 'ETH',
+                network: NETWORKS.ETH,
                 height: blockNumber,
                 hash: header.hash,
-                timestamp: parseInt(header.timestamp, 16) * 1000,
+                timestamp: hexToInt(header.timestamp) * 1000,
                 txCount: 0,
                 size: 0,
                 miner: header.miner,
-                fees: header.baseFeePerGas ? (parseInt(header.baseFeePerGas, 16) / 1e9).toFixed(2) + ' Gwei' : 'N/A',
+                fees: formatBaseFee(header.baseFeePerGas),
             };
             this.io.emit('new-block', fallbackBlock);
         }
