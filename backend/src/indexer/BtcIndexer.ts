@@ -3,6 +3,7 @@ import Block from '../models/Block.js';
 import Transaction from '../models/Transaction.js';
 import sequelize from '../config/database.js';
 import winston from 'winston';
+import { Server } from 'socket.io'; // Import Server
 
 import axiosRetry from 'axios-retry';
 
@@ -24,9 +25,11 @@ axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 export class BtcIndexer {
     private rpcUrl: string;
     private isSyncing: boolean = false;
+    private io: Server;
 
-    constructor(rpcUrl: string) {
+    constructor(rpcUrl: string, io: Server) {
         this.rpcUrl = rpcUrl;
+        this.io = io;
     }
 
     public async start() {
@@ -87,6 +90,12 @@ export class BtcIndexer {
     }
 
     private async indexBlock(block: any) {
+        // Idempotency check
+        const exists = await Block.findOne({ where: { network: 'BTC', blockNumber: block.height } });
+        if (exists) {
+            return;
+        }
+
         const t = await sequelize.transaction();
         try {
             await Block.create({
@@ -118,6 +127,17 @@ export class BtcIndexer {
 
             await t.commit();
             logger.info(`Indexed BTC block ${block.height}`);
+
+            // Emit Realtime Event
+            this.io.emit('new-block', {
+                network: 'BTC',
+                height: block.height,
+                hash: block.hash,
+                timestamp: block.time * 1000,
+                txCount: block.tx?.length || 0,
+                size: block.size
+            });
+
         } catch (error) {
             await t.rollback();
             throw error;

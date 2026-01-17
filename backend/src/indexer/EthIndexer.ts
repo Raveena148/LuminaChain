@@ -3,6 +3,7 @@ import Block from '../models/Block.js';
 import Transaction from '../models/Transaction.js';
 import sequelize from '../config/database.js';
 import winston from 'winston';
+import { Server } from 'socket.io';
 
 const logger = winston.createLogger({
     level: 'info',
@@ -16,9 +17,11 @@ const logger = winston.createLogger({
 export class EthIndexer {
     private web3: Web3;
     private isSyncing: boolean = false;
+    private io: Server;
 
-    constructor(rpcUrl: string) {
+    constructor(rpcUrl: string, io: Server) {
         this.web3 = new Web3(rpcUrl);
+        this.io = io;
     }
 
     public async start() {
@@ -63,6 +66,13 @@ export class EthIndexer {
         const block = await this.web3.eth.getBlock(blockNumber, true);
         if (!block) return;
 
+        // Idempotency check
+        const exists = await Block.findOne({ where: { network: 'ETH', blockNumber } });
+        if (exists) {
+            // logger.info(`Block ${blockNumber} already indexed.`);
+            return;
+        }
+
         const t = await sequelize.transaction();
         try {
             await Block.create({
@@ -83,7 +93,7 @@ export class EthIndexer {
                         fromAddress: tx.from,
                         toAddress: tx.to || '0x0000000000000000000000000000000000000000',
                         value: this.web3.utils.fromWei((tx.value || 0).toString(), 'ether'),
-                        fee: (BigInt(tx.gasPrice || 0) * BigInt(tx.gas || 0)).toString(),
+                        fee: this.web3.utils.fromWei((BigInt(tx.gasPrice || 0) * BigInt(tx.gas || 0)).toString(), 'ether'),
                         timestamp: new Date(Number(block.timestamp) * 1000),
                     }, { transaction: t });
                 }
@@ -91,6 +101,17 @@ export class EthIndexer {
 
             await t.commit();
             logger.info(`Indexed ETH block ${blockNumber} with ${block.transactions?.length} txs`);
+
+            // Emit Realtime Event
+            this.io.emit('new-block', {
+                network: 'ETH',
+                height: Number(block.number),
+                hash: block.hash,
+                timestamp: Number(block.timestamp) * 1000,
+                txCount: block.transactions?.length || 0,
+                size: Number(block.size)
+            });
+
         } catch (error) {
             await t.rollback();
             throw error;
